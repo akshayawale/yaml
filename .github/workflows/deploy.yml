@@ -22,9 +22,7 @@ jobs:
         run: npm install
 
       - name: Build Docker image
-        run: |
-          docker build -t akshay737/hello-world-nodejs .
-          docker images
+        run: docker build -t akshay737/hello-world-nodejs .
 
       - name: Login to DockerHub
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
@@ -32,27 +30,39 @@ jobs:
       - name: Push Docker image
         run: docker push akshay737/hello-world-nodejs
 
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-
-      - name: Sync Terraform files from S3
-        run: aws s3 sync s3://aws-ecs-fargate-tf-cf /root/terraform/terraform-eks
-
-      - name: List contents of terraform-eks directory
-        run: ls -R /root/terraform/terraform-eks
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
+      - name: Configure AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region us-west-1
+
+      - name: Create directory for Terraform files
+        run: mkdir -p ${{ github.workspace }}/terraform-eks
+
+      - name: Check S3 bucket contents (for debugging)
+        run: aws s3 ls s3://aws-ecs-fargate-tf-cf/terraform --recursive
+
+      - name: Download Terraform files from S3
+        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform ${{ github.workspace }}/terraform-eks
+
+      - name: List downloaded files (for debugging)
+        run: ls -R ${{ github.workspace }}/terraform-eks
+
+      - name: List current directory (for debugging)
+        run: ls -R ${{ github.workspace }}
+
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform/terraform-eks
+        working-directory: ${{ github.workspace }}/terraform-eks
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./terraform/terraform-eks
+        working-directory: ${{ github.workspace }}/terraform-eks
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
