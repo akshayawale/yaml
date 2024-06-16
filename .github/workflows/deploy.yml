@@ -24,10 +24,10 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t akshay737/hello-world-nodejs .
-          docker tag akshay737/hello-world-nodejs:latest your_dockerhub_username/hello-world-nodejs:latest
+          docker tag akshay737/hello-world-nodejs:latest akshay737/hello-world-nodejs:latest
 
       - name: Login to DockerHub
-        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u akshay737 --password-stdin
 
       - name: Push Docker image
         run: docker push akshay737/hello-world-nodejs:latest
