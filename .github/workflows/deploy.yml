@@ -42,7 +42,7 @@ jobs:
           aws configure set region us-west-1
 
       - name: Download Terraform files from S3
-        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform /root/terraform/terraform-eks
+        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform /terraform/terraform-eks
 
       - name: Terraform Init
         run: terraform init
