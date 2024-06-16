@@ -50,6 +50,9 @@ jobs:
       - name: List downloaded files (for debugging)
         run: ls -R ${{ github.workspace }}/terraform-eks
 
+      - name: List current directory (for debugging)
+        run: ls -R ${{ github.workspace }}
+
       - name: Verify Terraform files
         run: |
           if ! ls ${{ github.workspace }}/terraform-eks/*.tf >/dev/null 2>&1; then
