@@ -47,6 +47,9 @@ jobs:
       - name: Download Terraform files from S3
         run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform ${{ github.workspace }}/terraform-eks
 
+      - name: List downloaded files (for debugging)
+        run: ls -R ${{ github.workspace }}/terraform-eks
+
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ github.workspace }}/terraform-eks
