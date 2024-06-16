@@ -53,6 +53,13 @@ jobs:
       - name: List current directory (for debugging)
         run: ls -R ${{ github.workspace }}
 
+      - name: Verify Terraform files
+        run: |
+          if [ ! -f "${{ github.workspace }}/terraform-eks/main.tf" ]; then
+            echo "Error: main.tf not found in ${GITHUB_WORKSPACE}/terraform-eks"
+            exit 1
+          fi
+
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ github.workspace }}/terraform-eks
