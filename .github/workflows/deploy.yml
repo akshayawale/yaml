@@ -39,34 +39,28 @@ jobs:
           aws configure set region us-west-1
 
       - name: Create directory for Terraform files
-        run: mkdir -p ${{ github.workspace }}/terraform-eks
+        run: mkdir -p ${{ github.workspace }}/yaml/terraform-eks
 
-      - name: Check S3 bucket contents (for debugging)
-        run: aws s3 ls s3://aws-ecs-fargate-tf-cf/terraform --recursive
+      - name: Check files in terraform-eks directory (for debugging)
+        run: ls -R ${{ github.workspace }}/yaml/terraform-eks
 
-      - name: Download Terraform files from S3
-        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform ${{ github.workspace }}/terraform-eks
+      - name: Check files in yaml directory (for debugging)
+        run: ls -R ${{ github.workspace }}/yaml
 
-      - name: List downloaded files (for debugging)
-        run: ls -R ${{ github.workspace }}/terraform-eks
-
-      - name: List current directory (for debugging)
-        run: ls -R ${{ github.workspace }}
-
-      - name: Verify Terraform files
+      - name: Verify .tf files
         run: |
-          if ! ls ${{ github.workspace }}/terraform-eks/*.tf >/dev/null 2>&1; then
-            echo "Error: No .tf files found in ${{ github.workspace }}/terraform-eks"
+          if ! ls ${{ github.workspace }}/yaml/terraform-eks/*.tf >/dev/null 2>&1; then
+            echo "Error: No .tf files found in ${{ github.workspace }}/yaml/terraform-eks"
             exit 1
           fi
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ github.workspace }}/terraform-eks
+        working-directory: ${{ github.workspace }}/yaml/terraform-eks
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ${{ github.workspace }}/terraform-eks
+        working-directory: ${{ github.workspace }}/yaml/terraform-eks
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
