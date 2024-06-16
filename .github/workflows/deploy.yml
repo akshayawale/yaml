@@ -50,6 +50,9 @@ jobs:
       - name: List downloaded files (for debugging)
         run: ls -R ${{ github.workspace }}/terraform-eks
 
+      - name: List current directory (for debugging)
+        run: ls -R ${{ github.workspace }}
+
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ github.workspace }}/terraform-eks
