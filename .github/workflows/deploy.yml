@@ -30,9 +30,6 @@ jobs:
       - name: Push Docker image
         run: docker push akshay737/hello-world-nodejs
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-
       - name: Configure AWS CLI
         run: |
           sudo apt-get update
