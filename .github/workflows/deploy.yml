@@ -50,13 +50,10 @@ jobs:
       - name: List downloaded files (for debugging)
         run: ls -R ${{ github.workspace }}/terraform-eks
 
-      - name: List current directory (for debugging)
-        run: ls -R ${{ github.workspace }}
-
       - name: Verify Terraform files
         run: |
-          if [ ! -f "${{ github.workspace }}/terraform-eks/main.tf" ]; then
-            echo "Error: main.tf not found in ${GITHUB_WORKSPACE}/terraform-eks"
+          if ! ls ${{ github.workspace }}/terraform-eks/*.tf >/dev/null 2>&1; then
+            echo "Error: No .tf files found in ${{ github.workspace }}/terraform-eks"
             exit 1
           fi
 
