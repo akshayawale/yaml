@@ -22,13 +22,13 @@ jobs:
         run: npm install
 
       - name: Build Docker image
-        run: docker build -t your_dockerhub_username/hello-world-nodejs .
+        run: docker build -t akshay737/hello-world-nodejs .
 
       - name: Login to DockerHub
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Push Docker image
-        run: docker push your_dockerhub_username/hello-world-nodejs
+        run: docker push akshay737/hello-world-nodejs
 
       - name: Configure AWS CLI
         run: |
