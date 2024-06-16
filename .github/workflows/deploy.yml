@@ -41,16 +41,19 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region us-west-1
 
+      - name: Create directory for Terraform files
+        run: mkdir -p ${{ github.workspace }}/terraform-eks
+
       - name: Download Terraform files from S3
-        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform /terraform/terraform-eks
+        run: aws s3 sync s3://aws-ecs-fargate-tf-cf/terraform ${{ github.workspace }}/terraform-eks
 
       - name: Terraform Init
         run: terraform init
-        working-directory: /root/terraform/terraform-eks
+        working-directory: ${{ github.workspace }}/terraform-eks
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: /root/terraform/terraform-eks
+        working-directory: ${{ github.workspace }}/terraform-eks
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
