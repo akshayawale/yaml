@@ -25,7 +25,7 @@ jobs:
         run: docker build -t akshay737/hello-world-nodejs .
 
       - name: Login to DockerHub
-        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u akshay737 --password-stdin
 
       - name: Push Docker image
         run: docker push akshay737/hello-world-nodejs
@@ -37,15 +37,6 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region us-west-1
-
-      - name: Create directory for Terraform files
-        run: mkdir -p ${{ github.workspace }}/yaml/terraform-eks
-
-      - name: Check files in terraform-eks directory (for debugging)
-        run: ls -R ${{ github.workspace }}/yaml/terraform-eks
-
-      - name: Check files in yaml directory (for debugging)
-        run: ls -R ${{ github.workspace }}/yaml
 
       - name: Verify .tf files
         run: |
